@@ -21,6 +21,6 @@ Route::get('/stations', function (Request $request){
 });
 
 route::get('/routes', function(Request $request) {
-    $results = DB::select('select * from stop');
+    $results = DB::select('select * from route as r join station as s on s.id = r.station_id');
     return response()->json($results);
 });
