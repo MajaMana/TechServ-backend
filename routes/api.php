@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,26 +15,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/stations', function (Request $request) {
-    return response()->json([
-        'code' => 'AMS',
-        'name' => 'Amsterdam Centraal',
-        'country' => 'NL',
-        'facilities' => true,
-        'departures' => true,
-        'assistance' => true,
-]);
+Route::get('/stations', function (Request $request){
+    $results = DB::select('select * from station');
+    return response()->json($results);
 });
 
 route::get('/routes', function(Request $request) {
-    return response()->json([
-        'page' => 1,
-        'routes' => [
-            [
-                    'station' => 'Amsterdam Centraal',
-                    'arrival' => 'null',
-                    'departure' => null,
-            ]
-        ]
-    ]);
+    $results = DB::select('select * from stop');
+    return response()->json($results);
 });
