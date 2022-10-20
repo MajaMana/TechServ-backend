@@ -24,3 +24,10 @@ route::get('/routes', function(Request $request) {
     $results = DB::select('select * from route as r join station as s on s.id = r.station_id');
     return response()->json($results);
 });
+
+
+// SELECT *
+// FROM `route`
+// JOIN `stop`
+// ON route.id = stop.route_id
+// WHERE route.station_id = 1;
