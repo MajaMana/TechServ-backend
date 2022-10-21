@@ -15,6 +15,25 @@ use Illuminate\Support\Facades\DB;
 |
 */
 
+Route::get('/seed/stations', function (Request $request){
+    $string = file_get_contents("C:\Users\Marijana\Desktop\TechServ-backend\stations.json");
+    $json = json_decode($string, true);
+    $stations = $json['payload'];
+    foreach($stations as $station){
+        DB::table('station')->insert([
+            'code' => $station['code'],
+            'name' => $station['namen']['lang'],
+            'country' => $station['land'],
+            'facilities' => $station['heeftFaciliteiten'],
+            'departures' => $station['heeftVertrektijden'],
+            'assistance' => $station['heeftReisassistentie'],
+        ]);
+    }
+
+
+    return response()->json('');
+});
+
 Route::get('/stations', function (Request $request){
     $results = DB::select('select * from station');
     return response()->json($results);
@@ -28,8 +47,10 @@ route::get('/routes', function(Request $request) {
     FROM `route`
     JOIN `stop`
     ON route.id = stop.route_id
+    JOIN `station`
+    ON stop.station_id = station.id
     WHERE route.station_id = ' . $stationId .
-    ' LIMIT 10 OFFSET ' . $offset);
+    ' LIMIT 30 OFFSET ' . $offset);
 
     $routes = [];
     foreach($results as $result){
@@ -37,7 +58,7 @@ route::get('/routes', function(Request $request) {
     }
     return response()->json([
         'page' => (int)$_GET['page'],
-        'routes' => $routes,
+        'routes' => array_values($routes),
     ]);
 });
 
